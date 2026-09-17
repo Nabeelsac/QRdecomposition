@@ -22,36 +22,53 @@ To implement QR decomposition algorithm using the Gram-Schmidt method.
 
 
 ## Program:
-### Gram-Schmidt Method
-```
-import os 
-os.environ["OPENBLAS_NUM_THREADS"]="1"
-import numpy as np
-def QR_Decomposition(A):
-    n,m=A.shape
-    Q=np.zeros((n,n))
-    u=np.zeros((n,n))
-    u[:,0]=A[:,0]
-    Q[:,0]=u[:,0]/np.linalg.norm(u[:,0])
-    for i in range(1,n):
-        u[:,i]=A[:,i]
-        for j in range(i):
-            u[:,i]-=(A[:,i]@ Q[:,j])*Q[:,j]
-        Q[:,i]=u[:,i]/np.linalg.norm(u[:,i])
-    R=np.zeros((n,m))
-    for i in range(n):
-        for j in range(i,m):
-            R[i,j]=np.dot(A[:,j],Q[:,i].flatten())
-    print("The Q Matrix is\n",Q)
-    print("The R Matrix is\n",R)
-a = np.array(eval(input()))
-QR_Decomposition(a)
+'''
+Program to QR decomposition using the Gram-Schmidt method
+Developed by: Nather Nabeel S A C
+RegisterNumber: 212224100040
+'''
 
-```
+import os
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+
+import numpy as np
+
+# Input matrix
+A = np.array([[1, 1, 0],
+              [1, 0, 1],
+              [0, 1, 1]], dtype=float)
+
+# Number of rows and columns
+m, n = A.shape
+
+# Initialize Q and R
+Q = np.zeros((m, n))
+R = np.zeros((n, n))
+
+# Gram-Schmidt process
+for j in range(n):
+    v = A[:, j].copy()
+
+    for i in range(j):
+        R[i, j] = np.dot(Q[:, i], A[:, j])
+        v = v - R[i, j] * Q[:, i]
+
+    R[j, j] = np.linalg.norm(v)
+
+    if R[j, j] != 0:
+        Q[:, j] = v / R[j, j]
+
+# Display result
+print("The Q Matrix is")
+print(Q)
+
+print("The R Matrix is")
+print(R)
 
 ## Output
 
-<img width="1252" height="795" alt="image" src="https://github.com/user-attachments/assets/9247847b-d238-43a3-b896-ed57fd2fff39" />
+<img width="1205" height="968" alt="image" src="https://github.com/user-attachments/assets/374c0426-17e6-4fab-9e45-7aad02e60e6b" />
+
 
 
 
